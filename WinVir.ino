@@ -2,6 +2,8 @@
 #include <Keyboard.h>
 
 long randomdelay;
+long mousedelay;
+int mouserand;
 int picker;
 float time;
 int mousex;
@@ -11,7 +13,8 @@ int tabret;
 
 // how annoying you want this script to be from 1-5
 // 1 being almost unnoticeable and 5 making the PC unusable.
-int annoyance = 5;
+// should ideally be kept at 3 unless you're playing the long con or you want to cripple someones computer.
+int annoyance = 3;
 
 void setup() {
   Keyboard.begin(); //start emulating mouse
@@ -32,11 +35,31 @@ void loop() {
   time = millis(); //keeps track of how long the script has been running
   picker = random(1, 60); //used to choose which key to annoy the user with.
 
-  if (annoyance == 5) randomdelay = random(1000, 5000);
-  if (annoyance == 4) randomdelay = random(10000, 45000);
-  if (annoyance == 3) randomdelay = random(30000, 90000);
-  if (annoyance == 2) randomdelay = random(60000, 120000);
-  if (annoyance == 1) randomdelay = random(120000, 240000);
+  if (annoyance == 5) {
+    randomdelay = random(500, 5000);
+    mousedelay = random(10, 300);
+    mouserand = random(10, 100);
+  }
+  if (annoyance == 4) { 
+    randomdelay = random(10000, 30000);
+    mousedelay = random(1000, 3000);
+    mouserand = random(10, 50);
+  }
+  if (annoyance == 3) { 
+    randomdelay = random(20000, 90000);
+    mousedelay = random(1000, 15000);
+    mouserand = random(3, 10);
+  }
+  if (annoyance == 2) { 
+    randomdelay = random(60000, 120000);
+    mousedelay = random(1000, 20000);
+    mouserand = random(2, 5);
+  }
+  if (annoyance == 1) { 
+    randomdelay = random(120000, 240000);
+    mousedelay = random(3000, 25000);
+    mouserand = random(1, 3);
+  }
 
   //this block is used for debugging to see which key is going to be pressed next.
   Serial.print(time / 1000 / 60 );
@@ -103,7 +126,7 @@ void loop() {
       mousex = random(-200, 200); //mousex and mousey are used to decide how far to move the mouse horizontally and vertically.
       mousey = random(-200, 200);
 
-      delay(random(1000, 20000));
+      delay(mousedelay);
 
       //used for debugging
       Serial.print(mousex);
@@ -112,6 +135,6 @@ void loop() {
 
       Mouse.move(mousex, mousey); //actually move the mouse
       mousect = mousect + 1; //increment mousect by 1 so i know when to stop moving the mouse.
-    } while ( mousect < (random(1, 6))); //if mousect equals this amount, stop looping and restart the script.
+    } while ( mousect < (mouserand)); //if mousect equals this amount, stop looping and restart the script.
   }
 }
