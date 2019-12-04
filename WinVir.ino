@@ -5,7 +5,7 @@ long randomdelay;
 long mousedelay;
 int mouserand;
 int picker;
-float time;
+float ms;
 float mins;
 long secs;
 int mousex;
@@ -16,11 +16,12 @@ int tabret;
 String stringOne = "m: Next boi is in ";
 String stringTwo = "s. Picker is at ";
 String stringThree = "/60, so it'll be a ";
+String stringFour = "Annoyance is at ";
 
 // how annoying you want this script to be from 1-5
 // 1 being almost unnoticeable and 5 making the PC unusable.
 // should ideally be kept at 3 unless you're either playing the long con or you want to cripple someones computer.
-int annoyance = 4;
+int annoyance = 3;
 
 void setup() {
   Keyboard.begin(); //start emulating mouse
@@ -28,17 +29,14 @@ void setup() {
   delay(10000);
   Serial.begin(9600);
 
-  //these lines used to be required for randomness. they might still be, but need more testing.
-  //randomSeed(analogRead(3));
-  //picker = random(1, 60);
-
-  Serial.print("Annoyance is at ");
+  Serial.print(stringFour);
   Serial.println(annoyance);
 }
 
 void loop() {
   randomSeed(analogRead(3)); //reads noise on analog pin 3 to emulate randomness.
-  time = millis(); //keeps track of how long the script has been running
+  ms = millis(); //keeps track of how long the script has been running
+  mins = ms / 1000 / 60;
   picker = random(1, 60); //used to choose which key to annoy the user with.
 
   if (annoyance == 5) {
@@ -67,13 +65,11 @@ void loop() {
     mouserand = random(1, 3);
   }
 
-  mins = time / 1000 / 60;
   secs = randomdelay / 1000;
 
-  //this block is used for debugging to see which key is going to be pressed next.
+  //these next few lines are used for debugging.
   String displayString = mins + stringOne + secs + stringTwo + picker + stringThree;
   Serial.print(displayString);
-
   if (picker < 10) Serial.println("spaceboi.");
   else if (picker < 20) Serial.println("backboi.");
   else if (picker < 30) Serial.println("taboi.");
