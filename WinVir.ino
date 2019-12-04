@@ -6,15 +6,21 @@ long mousedelay;
 int mouserand;
 int picker;
 float time;
+float mins;
+long secs;
 int mousex;
 int mousey;
 int mousect;
 int tabret;
 
+String stringOne = "m: Next boi is in ";
+String stringTwo = "s. Picker is at ";
+String stringThree = "/60, so it'll be a ";
+
 // how annoying you want this script to be from 1-5
 // 1 being almost unnoticeable and 5 making the PC unusable.
-// should ideally be kept at 3 unless you're playing the long con or you want to cripple someones computer.
-int annoyance = 3;
+// should ideally be kept at 3 unless you're either playing the long con or you want to cripple someones computer.
+int annoyance = 4;
 
 void setup() {
   Keyboard.begin(); //start emulating mouse
@@ -26,8 +32,8 @@ void setup() {
   //randomSeed(analogRead(3));
   //picker = random(1, 60);
 
-Serial.print("Annoyance is at ");
-Serial.println(annoyance);
+  Serial.print("Annoyance is at ");
+  Serial.println(annoyance);
 }
 
 void loop() {
@@ -37,57 +43,43 @@ void loop() {
 
   if (annoyance == 5) {
     randomdelay = random(500, 5000);
-    mousedelay = random(10, 300);
+    mousedelay = random(10, 200);
     mouserand = random(10, 100);
   }
-  if (annoyance == 4) { 
+  if (annoyance == 4) {
     randomdelay = random(10000, 30000);
     mousedelay = random(1000, 3000);
     mouserand = random(10, 50);
   }
-  if (annoyance == 3) { 
+  if (annoyance == 3) {
     randomdelay = random(20000, 90000);
     mousedelay = random(1000, 15000);
     mouserand = random(3, 10);
   }
-  if (annoyance == 2) { 
+  if (annoyance == 2) {
     randomdelay = random(60000, 120000);
     mousedelay = random(1000, 20000);
     mouserand = random(2, 5);
   }
-  if (annoyance == 1) { 
+  if (annoyance == 1) {
     randomdelay = random(120000, 240000);
     mousedelay = random(3000, 25000);
     mouserand = random(1, 3);
   }
 
-  //this block is used for debugging to see which key is going to be pressed next.
-  Serial.print(time / 1000 / 60 );
-  Serial.print(" mins: Next boi is in ");
-  Serial.print(randomdelay / 1000);
-  Serial.print(" seconds.");
-  Serial.print(" Picker is at ");
-  Serial.print(picker);
-  Serial.print("/60, so it'll be a ");
+  mins = time / 1000 / 60;
+  secs = randomdelay / 1000;
 
-  if (picker < 10) {
-    Serial.println("spaceboi.");
-  }
-  else if (picker < 20) {
-    Serial.println("backboi.");
-  }
-  else if (picker < 30) {
-    Serial.println("taboi.");
-  }
-  else if (picker < 40) {
-    Serial.println("winboi.");
-  }
-  else if (picker < 50) {
-    Serial.println("returnboi.");
-  }
-  else {
-    Serial.println("mouseboi.");
-  }
+  //this block is used for debugging to see which key is going to be pressed next.
+  String displayString = mins + stringOne + secs + stringTwo + picker + stringThree;
+  Serial.print(displayString);
+
+  if (picker < 10) Serial.println("spaceboi.");
+  else if (picker < 20) Serial.println("backboi.");
+  else if (picker < 30) Serial.println("taboi.");
+  else if (picker < 40) Serial.println("winboi.");
+  else if (picker < 50) Serial.println("returnboi.");
+  else Serial.println("mouseboi.");
 
   delay(randomdelay); //delays the time set above before pressing a key.
 
@@ -134,7 +126,7 @@ void loop() {
       Serial.println(mousey);
 
       Mouse.move(mousex, mousey); //actually move the mouse
-      mousect = mousect + 1; //increment mousect by 1 so i know when to stop moving the mouse.
+      mousect = mousect + 1; //increment mousect by 1 so the script knows when to stop moving the mouse.
     } while ( mousect < (mouserand)); //if mousect equals this amount, stop looping and restart the script.
   }
 }
