@@ -3,7 +3,7 @@
 
 long randomdelay;
 long mousedelay;
-int mousemove;
+int mouserand;
 int picker;
 float ms;
 float mins;
@@ -21,7 +21,7 @@ String stringFour = "Annoyance is at ";
 // how annoying you want this script to be from 1-5
 // 1 being almost unnoticeable and 5 making the PC unusable.
 // should ideally be kept at 3 unless you're either playing the long con or you want to cripple someones computer.
-int annoyance = 4;
+int annoyance = 3;
 
 void setup() {
   Keyboard.begin(); //start emulating mouse
@@ -42,27 +42,27 @@ void loop() {
   if (annoyance == 5) {
     randomdelay = random(500, 5000);
     mousedelay = random(10, 200);
-    mousemove = random(20, 100);
+    mouserand = random(10, 100);
   }
   if (annoyance == 4) {
     randomdelay = random(10000, 30000);
     mousedelay = random(1000, 3000);
-    mousemove = random(10, 20);
+    mouserand = random(10, 50);
   }
   if (annoyance == 3) {
     randomdelay = random(20000, 90000);
     mousedelay = random(1000, 15000);
-    mousemove = random(3, 10);
+    mouserand = random(3, 10);
   }
   if (annoyance == 2) {
     randomdelay = random(60000, 120000);
     mousedelay = random(1000, 20000);
-    mousemove = random(2, 5);
+    mouserand = random(2, 5);
   }
   if (annoyance == 1) {
     randomdelay = random(120000, 240000);
     mousedelay = random(3000, 25000);
-    mousemove = random(1, 3);
+    mouserand = random(1, 3);
   }
 
   secs = randomdelay / 1000;
@@ -72,7 +72,7 @@ void loop() {
   Serial.print(displayString);
   if (picker < 10) Serial.println("spaceboi.");
   else if (picker < 20) Serial.println("backboi.");
-  else if (picker < 30) Serial.println("tabbyboi.");
+  else if (picker < 30) Serial.println("taboi.");
   else if (picker < 40) Serial.println("winboi.");
   else if (picker < 50) Serial.println("returnboi.");
   else Serial.println("mouseboi.");
@@ -102,7 +102,7 @@ void loop() {
       Serial.print("tabret is ");
       Serial.println(tabret);
       tabret = tabret + 1; //increment tabret by 1.
-    } while ( tabret < (random(2, 15))); //when tabret equals this amount, stop looping and then press enter.
+    } while ( tabret < (random(2, 15))); //if tabret equals this amount, stop looping and then press enter.
     delay(100);
     Keyboard.write(KEY_RETURN);
   }
@@ -123,6 +123,6 @@ void loop() {
 
       Mouse.move(mousex, mousey); //actually move the mouse
       mousect = mousect + 1; //increment mousect by 1 so the script knows when to stop moving the mouse.
-    } while ( mousect < (mousemove)); //when mousect equals mousemove, stop looping and restart the script.
+    } while ( mousect < (mouserand)); //if mousect equals this amount, stop looping and restart the script.
   }
 }
