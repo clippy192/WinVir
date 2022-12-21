@@ -2,8 +2,8 @@
 #include <Keyboard.h>
 
 long randomdelay;
-long mousedelay;
-int mousemove;
+//long mousedelay;
+//int mousemove;
 int picker;
 float ms;
 float mins;
@@ -18,52 +18,34 @@ String stringTwo = "s. Picker is at ";
 String stringThree = "/60, so it'll be a ";
 String stringFour = "Annoyance is at ";
 
-// how annoying you want this script to be from 1-5
-// 1 being almost unnoticeable and 5 making the PC unusable.
-// should ideally be kept at 3 unless you're either playing the long con or you want to cripple someones computer.
-int annoyance = 4;
+// how annoying you want this script to be, lower is more annoying. recommended between 1 and 5
+int annoyance = 1                   ;
 
 void setup() {
   Keyboard.begin(); //start emulating mouse
   Mouse.begin(); //start emulating keyboard
   delay(10000);
   Serial.begin(9600);
-
   Serial.print(stringFour);
   Serial.println(annoyance);
 }
 
 void loop() {
-  randomSeed(analogRead(3)); //reads noise on analog pin 3 to emulate randomness.
-  ms = millis(); //keeps track of how long the script has been running
-  mins = ms / 1000 / 60;
-  picker = random(1, 60); //used to choose which key to annoy the user with.
 
-  if (annoyance == 5) {
-    randomdelay = random(500, 5000);
-    mousedelay = random(10, 200);
-    mousemove = random(20, 100);
-  }
-  if (annoyance == 4) {
-    randomdelay = random(10000, 30000);
-    mousedelay = random(1000, 3000);
-    mousemove = random(10, 20);
-  }
-  if (annoyance == 3) {
-    randomdelay = random(20000, 90000);
-    mousedelay = random(1000, 15000);
-    mousemove = random(3, 10);
-  }
-  if (annoyance == 2) {
-    randomdelay = random(60000, 120000);
-    mousedelay = random(1000, 20000);
-    mousemove = random(2, 5);
-  }
-  if (annoyance == 1) {
-    randomdelay = random(120000, 240000);
-    mousedelay = random(3000, 25000);
-    mousemove = random(1, 3);
-  }
+  //initial seed and starting values for shit modified by annoyance factor
+  randomSeed(analogRead(3));
+  randomdelay = random(5000, 30000); //delay between each annoyance method
+  //mousedelay = random(100, 2000); //delay between each individual mouse movement in method 6
+  //mousemove = random(10, 100); //how many times to actually move the mouse
+
+  ms = millis(); //keeps track of how long the script has been running
+  mins = ms / 60000;
+  picker = random(1, 50); //used to choose which method to annoy the user with.
+  tabret = random(1, 16); //used to press tab a certain amount of times in method 5
+
+  randomdelay = annoyance * randomdelay;
+  //mousedelay = annoyance * mousedelay;
+  //mousemove = mousemove / annoyance;
 
   secs = randomdelay / 1000;
 
@@ -72,12 +54,15 @@ void loop() {
   Serial.print(displayString);
   if (picker < 10) Serial.println("spaceboi.");
   else if (picker < 20) Serial.println("backboi.");
-  else if (picker < 30) Serial.println("tabbyboi.");
+  else if (picker < 30) Serial.println("altboi.");
   else if (picker < 40) Serial.println("winboi.");
-  else if (picker < 50) Serial.println("returnboi.");
+  else if (picker < 50) {
+    Serial.print("tab-boi. should press tab this many times: ");
+    Serial.println(tabret);
+  }
   else Serial.println("mouseboi.");
 
-  delay(randomdelay); //delays the time set above before pressing a key.
+  delay(randomdelay); //delays the time set above before pressing a key
 
   if (picker < 10) { //if picker is under 10, spacebar.
     Keyboard.write(' ');
@@ -94,35 +79,32 @@ void loop() {
   else if (picker < 40) { //if picker is under 40, Windows key.
     Keyboard.write(KEY_LEFT_GUI);
   }
-  else if (picker < 50) { //if picker is under 50, press tab an arbitrary amount of times and then press enter.
-    tabret = 0;
-    do {
-      randomSeed(analogRead(3)); //rerandomize seed.
+  else { //if picker is 50 or lower, press tab an arbitrary amount of times and then press enter.
+    for (int i = 0; i < tabret; i++) {
       Keyboard.write(KEY_TAB);
-      Serial.print("tabret is ");
-      Serial.println(tabret);
-      tabret = tabret + 1; //increment tabret by 1.
-    } while ( tabret < (random(2, 15))); //when tabret equals this amount, stop looping and then press enter.
-    delay(100);
-    Keyboard.write(KEY_RETURN);
+      delay(100);
+    }
+    Keyboard.write(KEY_RETURN); //loop until "i" less than tabret, then press enter.
   }
-  else { //any other number, move mouse in a random direction an arbitrary amount of times.
-    Serial.println("Just fuck my shit up fam.");
-    mousect = 0;
-    do {
-      randomSeed(analogRead(3));//rerandomize seed.
-      mousex = random(-200, 200); //mousex and mousey are used to decide how far to move the mouse horizontally and vertically.
-      mousey = random(-200, 200);
-
-      delay(mousedelay);
-
-      //used for debugging
-      Serial.print(mousex);
-      Serial.print(", ");
-      Serial.println(mousey);
-
-      Mouse.move(mousex, mousey); //actually move the mouse
-      mousect = mousect + 1; //increment mousect by 1 so the script knows when to stop moving the mouse.
-    } while ( mousect < (mousemove)); //when mousect equals mousemove, stop looping and restart the script.
-  }
+  
+// may remove this, its never really worked right
+//  else { //any other number, move mouse in a random direction.
+//    Serial.println("Just fuck my shit up fam.");
+//    mousect = 0;
+//    do {
+//      randomSeed(analogRead(3)); //rerandomize seed every loop. this doesn't really work. it's too predictable.
+//      mousex = random(-200, 200); //mousex and mousey are used to decide how far to move the mouse horizontally and vertically.
+//      mousey = random(-200, 200);
+//
+//      delay(mousedelay * annoyance);
+//
+//      //used for debugging
+//      Serial.print(mousex);
+//      Serial.print(", ");
+//      Serial.println(mousey);
+//
+//      Mouse.move(mousex, mousey); //actually move the mouse
+//      mousect = mousect + 1; //increment mousect by 1 so the script knows when to stop moving the mouse.
+//    } while ( mousect < (mousemove)); //when mousect equals mousemove, stop looping and restart the script.
+//  }
 }
