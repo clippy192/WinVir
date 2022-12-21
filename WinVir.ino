@@ -30,7 +30,7 @@ void loop() {
   randomdelay = random(5000, 30000); //delay between each annoyance method
   ms = millis(); //keeps track of how long the script has been running
   mins = ms / 60000;
-  picker = random(50, 60); //used to choose which method to annoy the user with.
+  picker = random(1, 60); //used to choose which method to annoy the user with.
   tabret = random(1, 16); //used to press tab a certain amount of times in method 5
   randomdelay = annoyance * randomdelay;
   secs = randomdelay / 1000;
@@ -94,10 +94,10 @@ void loop() {
       Keyboard.write(KEY_TAB);
       delay(100);
     }
-    Keyboard.write(KEY_RETURN); //loop until "i" less than tabret, then press enter.
+    Keyboard.write(KEY_RETURN);
   }
 //method 6
  else {
-  Keyboard.println(banstring[random(0,12)]);
+  Keyboard.println(banstring[random(0,12)]); //send a string pulled from the banstring array
  }
 }
